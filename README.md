@@ -1,4 +1,8 @@
 
+# **Go 程序与 Linux 内核交互的模块关系分析**
+
+## **goroutine profile 堆栈**
+
 ```plaintext
 goroutine profile: total 5
 1 @ 0x43a971 0x478c3d 0x736171 0x735fa5 0x732dcb 0x74c60f 0x74d0be 0x6c02a9 0x6c21a4 0x6cdb0e 0x6be7a5 0x481801
@@ -55,7 +59,7 @@ goroutine profile: total 5
 ```
 
 
-以下是 Go 程序与 Linux 内核交互的模块关系图（使用 Mermaid 语法）：
+## **Go 程序与 Linux 内核交互的时序图**
 
 ```mermaid
 flowchart TD
@@ -183,18 +187,20 @@ sequenceDiagram
 
 ---
 
+# **忽略 EINTR 的 I/O 操作的原理**
+
 以下是对 `internal/poll.ignoringEINTRIO` 的详细分析，包括其作用、名称含义及其在 Go I/O 模型中的关键角色：
 
 ---
 
-### **名称解析**
+## **名称解析**
 - **`ignoringEINTRIO`** = **Ignoring EINTR in I/O**（忽略 I/O 操作中的 `EINTR` 错误）
   - **`EINTR`**：Unix 系统调用错误码（`Interrupted system call`），表示系统调用被信号中断
   - **`I/O`**：输入/输出操作（如 `read`/`write` 系统调用）
 
 ---
 
-### **核心作用**
+## **核心作用**
 `ignoringEINTRIO` 是 Go 运行时在 **处理 I/O 系统调用时自动重试被中断操作** 的关键机制，主要解决以下问题：
 
 1. **信号中断处理**  
@@ -209,7 +215,7 @@ sequenceDiagram
 
 ---
 
-### **代码示例分析**
+## **代码示例分析**
 从你提供的调用栈看，这是 HTTP 服务器读取请求时的调用链：
 ```go
 net/http.(*connReader).backgroundRead() 
@@ -246,7 +252,7 @@ func (fd *FD) Read(p []byte) (int, error) {
 
 ---
 
-### **处理流程对比**
+## **处理流程对比**
 | 场景                | 无 `ignoringEINTRIO`               | 有 `ignoringEINTRIO`               |
 |---------------------|------------------------------------|------------------------------------|
 | 系统调用被信号中断  | 返回 `EINTR` 错误到应用层          | 自动重试系统调用，应用无感知       |
@@ -255,7 +261,7 @@ func (fd *FD) Read(p []byte) (int, error) {
 
 ---
 
-### **设计意义**
+## **设计意义**
 1. **透明性**  
    对开发者隐藏 Unix 信号机制复杂性，使 Go 的 I/O API（如 `net.Conn.Read/Write`）表现为 **"始终阻塞直到完成"** 的语义。
 
@@ -267,7 +273,7 @@ func (fd *FD) Read(p []byte) (int, error) {
 
 ---
 
-### **典型应用场景**
+## **典型应用场景**
 ```mermaid
 sequenceDiagram
     participant App as 应用程序
@@ -286,7 +292,7 @@ sequenceDiagram
 
 ---
 
-### **调试建议**
+## **调试建议**
 若在调用栈中频繁看到此函数：
 1. **检查信号源**  
    使用 `strace -e signal=all` 跟踪非 Go 运行时信号（如外部 SIGTERM）
