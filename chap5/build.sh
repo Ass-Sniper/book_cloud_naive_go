@@ -24,15 +24,21 @@ mkdir -p $OUTPUT_DIR
 # 构建项目
 echo "正在构建项目..."
 
+if [ -d .git ]; then
+  BUILD_FLAGS=""
+else 
+  BUILD_FLAGS="-buildvcs=false"
+fi
+
 # 编译当前平台的二进制文件
-go build -o $OUTPUT_DIR/$PROJECT_NAME
+go build -o $OUTPUT_DIR/$PROJECT_NAME $BUILD_FLAGS 
 
 # 如果需要支持多平台编译，可以在这里添加不同平台的构建
 # 以下为示例，可以在 Linux、macOS、Windows 下交叉编译
 
 # 编译 Linux 版本
 echo "正在编译 Linux 版本..."
-GOOS=linux GOARCH=amd64 go build -o $OUTPUT_DIR/$PROJECT_NAME-linux
+GOOS=linux GOARCH=amd64 go build -o $OUTPUT_DIR/$PROJECT_NAME-linux $BUILD_FLAGS
 
 # 打印编译完成的信息
 echo "构建完成！可执行文件已存放在 $OUTPUT_DIR 目录下"
