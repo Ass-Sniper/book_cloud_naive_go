@@ -180,3 +180,131 @@ sequenceDiagram
 2. 通过 **DMA 直接内存访问**减少 CPU 拷贝开销
 3. 利用 **timerfd** 实现精确的定时器管理
 4. 依赖 **VFS 抽象层**统一处理不同文件系统
+
+---
+
+以下是对 `internal/poll.ignoringEINTRIO` 的详细分析，包括其作用、名称含义及其在 Go I/O 模型中的关键角色：
+
+---
+
+### **名称解析**
+- **`ignoringEINTRIO`** = **Ignoring EINTR in I/O**（忽略 I/O 操作中的 `EINTR` 错误）
+  - **`EINTR`**：Unix 系统调用错误码（`Interrupted system call`），表示系统调用被信号中断
+  - **`I/O`**：输入/输出操作（如 `read`/`write` 系统调用）
+
+---
+
+### **核心作用**
+`ignoringEINTRIO` 是 Go 运行时在 **处理 I/O 系统调用时自动重试被中断操作** 的关键机制，主要解决以下问题：
+
+1. **信号中断处理**  
+   当 Go 程序执行阻塞式 I/O 时（如 `read`/`accept`），若进程收到信号（如 `SIGURG` Go 调度信号），内核会中断系统调用并返回 `EINTR` 错误。  
+   **该函数自动重试被中断的调用**，避免上层应用感知到此类临时错误。
+
+2. **异步 I/O 兼容性**  
+   在 Go 的异步网络轮询模型（epoll/kqueue）中，需保证非阻塞操作的正确性，`ignoringEINTRIO` 确保底层系统调用在短暂中断后继续执行。
+
+3. **平台兼容性**  
+   统一处理不同 Unix-like 系统对 `EINTR` 的实现差异（如 Linux 和 BSD 的信号处理细节）。
+
+---
+
+### **代码示例分析**
+从你提供的调用栈看，这是 HTTP 服务器读取请求时的调用链：
+```go
+net/http.(*connReader).backgroundRead() 
+→ net.(*conn).Read() 
+→ net.(*netFD).Read() 
+→ internal/poll.(*FD).Read() 
+→ internal/poll.ignoringEINTRIO() 
+→ syscall.Read() 
+```
+
+**关键代码逻辑**（简化自 Go 源码 `internal/poll/fd_unix.go`）：
+```go
+func ignoringEINTRIO(fn func() error) error {
+    for {
+        err := fn()
+        if err != syscall.EINTR { // 仅过滤 EINTR 错误
+            return err
+        }
+        // 自动重试被中断的调用
+    }
+}
+
+// 实际应用示例（FD.Read）
+func (fd *FD) Read(p []byte) (int, error) {
+    var n int
+    err := ignoringEINTRIO(func() error {
+        var err error
+        n, err = syscall.Read(fd.Sysfd, p) // 执行系统调用
+        return err
+    })
+    return n, err
+}
+```
+
+---
+
+### **处理流程对比**
+| 场景                | 无 `ignoringEINTRIO`               | 有 `ignoringEINTRIO`               |
+|---------------------|------------------------------------|------------------------------------|
+| 系统调用被信号中断  | 返回 `EINTR` 错误到应用层          | 自动重试系统调用，应用无感知       |
+| 网络延迟波动        | 可能因临时中断导致连接异常         | 无缝恢复，保持连接稳定性           |
+| 调试复杂性          | 需手动处理信号中断                 | 运行时透明处理，简化应用逻辑       |
+
+---
+
+### **设计意义**
+1. **透明性**  
+   对开发者隐藏 Unix 信号机制复杂性，使 Go 的 I/O API（如 `net.Conn.Read/Write`）表现为 **"始终阻塞直到完成"** 的语义。
+
+2. **性能优化**  
+   减少因 `EINTR` 导致的无效上下文切换（相比传统 C 程序需手动重试）。
+
+3. **与 Go 调度器集成**  
+   当 `EINTR` 由 Go 自身的调度信号（如 `SIGURG`）触发时，静默重试机制能与 Goroutine 调度完美协同，避免破坏调度逻辑。
+
+---
+
+### **典型应用场景**
+```mermaid
+sequenceDiagram
+    participant App as 应用程序
+    participant Runtime as Go Runtime
+    participant Kernel as Linux 内核
+
+    App->>Runtime: conn.Read()
+    Runtime->>Kernel: read(fd, buf, len)
+    Note over Kernel: 系统调用被 SIGURG 中断
+    Kernel-->>Runtime: 返回 EINTR
+    Runtime->>Runtime: ignoringEINTRIO 自动重试
+    Runtime->>Kernel: 再次调用 read()
+    Kernel-->>Runtime: 返回实际数据
+    Runtime-->>App: 返回读取结果
+```
+
+---
+
+### **调试建议**
+若在调用栈中频繁看到此函数：
+1. **检查信号源**  
+   使用 `strace -e signal=all` 跟踪非 Go 运行时信号（如外部 SIGTERM）
+   ```bash
+   strace -p <PID> -e trace=signal
+   ```
+
+2. **性能分析**  
+   若重试次数过多，可能表明系统负载高或信号风暴：
+   ```bash
+   perf top -p <PID> -g
+   ```
+
+3. **Go 版本验证**  
+   某些旧版本（<1.14）的 `EINTR` 处理存在缺陷，确保使用 Go 1.16+ 版本。
+
+---
+
+通过这种设计，Go 实现了 **高可靠性的 I/O 抽象层**，使开发者无需关注底层系统调用的中断细节，这是 Go 网络编程高性能的重要基础之一。
+
+
