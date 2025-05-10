@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KV 存储系统</title>
+  <link rel="stylesheet" href="/public/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <h1>KV 存储系统 Web UI</h1>
+  <div class="logout">
+    <a href="/logout">退出登录</a>
+  </div>
+
+  <h2>➕ 添加键值对</h2>
+  <form id="addForm">
+    Key: <input type="text" id="key" required>
+    Value: <input type="text" id="value" required>
+    TTL(秒): <input type="number" id="ttl" value="0" min="0">
+    <button type="submit">添加</button>
+  </form>
+
+  <h2>📋 当前存储</h2>
+  <button onclick="loadKeys()">🔄 刷新列表</button>
+  <table id="kvTable">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+        <th>TTL</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div id="pagination" style="margin-top: 10px;"></div>
+
+  <script src="/public/script.js"></script>
+
+  <h2>📦 批量操作</h2>
+  <button onclick="exportData()">📤 导出</button>
+  <input type="file" accept=".json" onchange="importData(event)">
+</body>
+</html>

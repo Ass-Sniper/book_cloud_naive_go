@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  td:first-child {
+    max-width: 200px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+  
+  
+  input, button {
+    margin: 5px;
+    padding: 6px;
+  }
+  
+  .logout {
+    float: right;
+    margin-top: -40px;
+  }
+  
+  .logout a {
+    text-decoration: none;
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  
+  .logout a:hover {
+    background-color: #d32f2f;
+  }
+  
+  .edit-mode button {
+    margin-right: 5px;
+  }
+  
+  .json-toggle {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .json-content {
+    display: none;
+    margin-top: 0.3em;
+  }
+  
+  .json-container {
+    margin: 0.3em 0;
+  }
+  

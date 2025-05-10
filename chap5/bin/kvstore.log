@@ -1,0 +1,359 @@
+time="2025-05-10T23:02:24+08:00" level=info msg="Starting the KV Store Server..." goroutine=1 module=runtime
+time="2025-05-10T23:02:24+08:00" level=info msg="KV store running at http://192.168.121.128:8080" goroutine=1 module=runtime
+time="2025-05-10T23:02:24+08:00" level=info msg="pprof running at http://192.168.121.128:6060/debug/pprof/" goroutine=8 module=runtime
+time="2025-05-10T23:02:24+08:00" level=info msg="TTL GC started" goroutine=9 module=runtime
+time="2025-05-10T23:02:32+08:00" level=warning msg="unauthenticated access" goroutine=18 module=v5 path=/ reason="invalid session token" remote="192.168.121.1:10642"
+2025/05/10 23:02:32 "GET http://192.168.121.128:8080/ HTTP/1.1" from 192.168.121.1:10642 - 302 29B in 538.289µs
+2025/05/10 23:02:32 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10642 - 200 1478B in 432.76µs
+2025/05/10 23:02:37 "POST http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10642 - 302 0B in 53.543521ms
+2025/05/10 23:02:37 "GET http://192.168.121.128:8080/ HTTP/1.1" from 192.168.121.1:10642 - 200 1142B in 1.913696ms
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:10642 - 200 133B in 220.259µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/2121212 HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 66.152µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:10642 - 200 36B in 33.241µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 28.125µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 34.772µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 27.938µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 29.379µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:10642 - 200 48B in 33.588µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 24.323µs
+2025/05/10 23:02:38 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:10642 - 200 40B in 33.077µs
+2025/05/10 23:02:53 "PUT http://192.168.121.128:8080/kv/2121212 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 400.614µs
+2025/05/10 23:02:53 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:10642 - 200 133B in 42.78µs
+2025/05/10 23:02:53 "GET http://192.168.121.128:8080/kv/2121212 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 28.187µs
+2025/05/10 23:02:53 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:10642 - 200 36B in 25.348µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 25.44µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 25.712µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 24.326µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 24.455µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:10642 - 200 48B in 37.962µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 33.646µs
+2025/05/10 23:02:54 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:10642 - 200 40B in 26.641µs
+time="2025-05-10T23:02:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:02:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:02:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:10642 - 200 133B in 84.76µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/2121212 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 28.325µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:10642 - 200 36B in 24.519µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 24.315µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:10642 - 200 45B in 24.971µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 33.031µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:10642 - 200 43B in 42.707µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:10642 - 200 48B in 25.442µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:10642 - 200 41B in 37.185µs
+2025/05/10 23:02:56 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:10642 - 200 40B in 72.503µs
+2025/05/10 23:03:07 "GET http://192.168.121.128:8080/logout HTTP/1.1" from 192.168.121.1:10642 - 302 29B in 17.759µs
+2025/05/10 23:03:07 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10642 - 200 1478B in 172.315µs
+time="2025-05-10T23:03:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:03:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:03:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:03:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:03:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:03:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:04:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:04:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:04:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:04:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:04:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:04:54+08:00" level=info msg="Deleting expired key: 2121212" goroutine=9 module=store
+time="2025-05-10T23:04:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:05:03 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10766 - 200 1677B in 1.408626ms
+time="2025-05-10T23:05:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:05:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:05:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:05:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:05:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:05:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:06:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:06:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:06:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:06:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:06:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:06:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:07:05 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 200 1722B in 142.28µs
+2025/05/10 23:07:08 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 200 1722B in 115.203µs
+2025/05/10 23:07:15 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 200 1722B in 221.696µs
+2025/05/10 23:07:17 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 200 1722B in 710.309µs
+time="2025-05-10T23:07:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:07:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:07:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:07:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:07:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:07:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:08:16 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 200 1720B in 147.874µs
+time="2025-05-10T23:08:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:08:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:08:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:08:39 "POST http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10818 - 302 0B in 53.071631ms
+2025/05/10 23:08:39 "GET http://192.168.121.128:8080/ HTTP/1.1" from 192.168.121.1:10818 - 200 1142B in 291.997µs
+2025/05/10 23:08:39 "GET http://192.168.121.128:8080/public/style.css HTTP/1.1" from 192.168.121.1:10818 - 200 991B in 270.609µs
+2025/05/10 23:08:39 "GET http://192.168.121.128:8080/public/script.js HTTP/1.1" from 192.168.121.1:10885 - 200 6425B in 296.731µs
+2025/05/10 23:08:39 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:10885 - 200 123B in 74.646µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:10885 - 200 36B in 37.27µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:10885 - 200 41B in 34.136µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:10885 - 200 45B in 44.601µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:10885 - 200 43B in 33.693µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:10885 - 200 43B in 27.28µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:10885 - 200 48B in 35.904µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:10885 - 200 41B in 26.572µs
+2025/05/10 23:08:40 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:10885 - 200 40B in 28.825µs
+2025/05/10 23:08:52 "GET http://192.168.121.128:8080/logout HTTP/1.1" from 192.168.121.1:10885 - 302 29B in 16.51µs
+2025/05/10 23:08:52 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10885 - 200 1720B in 204.819µs
+time="2025-05-10T23:08:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:08:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:08:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:08:54 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:10885 - 200 1593B in 131.781µs
+2025/05/10 23:08:56 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10885 - 200 1720B in 122.728µs
+2025/05/10 23:08:57 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:10885 - 200 1593B in 121.981µs
+2025/05/10 23:09:20 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:10885 - 200 1591B in 200.612µs
+time="2025-05-10T23:09:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:09:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:09:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:09:30 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10885 - 200 1720B in 157.95µs
+2025/05/10 23:09:31 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:10885 - 200 1591B in 115.091µs
+2025/05/10 23:09:33 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:10885 - 200 1720B in 154.465µs
+time="2025-05-10T23:09:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:09:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:09:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:10:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:10:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:10:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:10:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:10:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:10:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:11:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:11:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:11:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:11:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:11:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:11:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:12:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:12:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:12:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:12:50 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1818B in 158.327µs
+time="2025-05-10T23:12:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:12:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:12:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:13:12 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1817B in 939.384µs
+time="2025-05-10T23:13:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:13:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:13:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:13:29 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1835B in 141.248µs
+2025/05/10 23:13:38 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1836B in 141.456µs
+time="2025-05-10T23:13:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:13:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:13:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:13:55 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1835B in 139.606µs
+2025/05/10 23:14:08 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11010 - 200 1591B in 156.569µs
+2025/05/10 23:14:09 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1835B in 111.414µs
+2025/05/10 23:14:24 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11010 - 200 1836B in 110.337µs
+time="2025-05-10T23:14:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:14:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:14:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:14:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:14:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:14:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:15:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:15:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:15:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:15:54 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11079 - 200 1627B in 134.027µs
+time="2025-05-10T23:15:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:15:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:15:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:16:08 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11079 - 200 1664B in 140.811µs
+2025/05/10 23:16:09 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11079 - 200 1664B in 113.824µs
+time="2025-05-10T23:16:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:16:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:16:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:16:49 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11079 - 200 1903B in 135.767µs
+time="2025-05-10T23:16:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:16:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:16:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:16:58 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11079 - 200 1902B in 113.699µs
+time="2025-05-10T23:17:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:17:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:17:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:17:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:17:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:17:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:18:00 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11126 - 200 1831B in 121.043µs
+2025/05/10 23:18:10 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11126 - 200 1591B in 134.555µs
+2025/05/10 23:18:11 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11126 - 200 1831B in 112.968µs
+2025/05/10 23:18:13 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11126 - 200 1591B in 127.512µs
+time="2025-05-10T23:18:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:18:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:18:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:18:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:18:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:18:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:19:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:19:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:19:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:19:50 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11174 - 200 1817B in 216.597µs
+2025/05/10 23:19:52 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11174 - 200 1831B in 137.921µs
+2025/05/10 23:19:53 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11174 - 200 1817B in 116.689µs
+time="2025-05-10T23:19:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:19:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:19:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:20:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:20:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:20:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:20:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:20:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:20:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:20:57 "GET http://192.168.121.128:8080/register HTTP/1.1" from 192.168.121.1:11206 - 200 2592B in 166.233µs
+2025/05/10 23:21:01 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11206 - 200 1831B in 121.315µs
+2025/05/10 23:21:11 "POST http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11206 - 302 0B in 53.888931ms
+2025/05/10 23:21:11 "GET http://192.168.121.128:8080/ HTTP/1.1" from 192.168.121.1:11206 - 304 0B in 46.116µs
+2025/05/10 23:21:11 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:11206 - 200 123B in 157.183µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:11206 - 200 36B in 27.635µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:11206 - 200 41B in 35.365µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:11206 - 200 45B in 59.769µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:11206 - 200 43B in 46.374µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:11206 - 200 43B in 56.547µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:11206 - 200 48B in 26.561µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:11206 - 200 41B in 25.968µs
+2025/05/10 23:21:12 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:11206 - 200 40B in 25.753µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv?page=1&size=10000 HTTP/1.1" from 192.168.121.1:11206 - 200 126B in 82.812µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:11206 - 200 36B in 58.896µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:11206 - 200 41B in 48.635µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:11206 - 200 45B in 26.245µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:11206 - 200 43B in 25.922µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:11206 - 200 43B in 26.16µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:11206 - 200 48B in 33.277µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:11206 - 200 41B in 25.909µs
+2025/05/10 23:21:18 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:11206 - 200 40B in 25.94µs
+time="2025-05-10T23:21:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:21:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:21:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+2025/05/10 23:21:42 "GET http://192.168.121.128:8080/logout HTTP/1.1" from 192.168.121.1:11206 - 302 29B in 29.296µs
+2025/05/10 23:21:42 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11206 - 200 1831B in 158.06µs
+time="2025-05-10T23:21:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:21:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:21:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:22:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:22:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:22:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:22:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:22:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:22:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:23:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:23:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:23:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:23:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:23:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:23:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:24:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:24:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:24:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:24:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:24:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:24:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:24:57+08:00" level=warning msg="unauthenticated access" goroutine=135 module=v5 path=/kv reason="no session cookie" remote="192.168.121.1:11347"
+2025/05/10 23:24:57 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:11347 - 302 29B in 190.108µs
+2025/05/10 23:24:57 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11347 - 200 1831B in 169.591µs
+2025/05/10 23:25:04 "GET http://192.168.121.128:8080/logout HTTP/1.1" from 192.168.121.1:11347 - 302 29B in 16.934µs
+2025/05/10 23:25:04 "GET http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11347 - 200 1831B in 138.831µs
+2025/05/10 23:25:11 "POST http://192.168.121.128:8080/login HTTP/1.1" from 192.168.121.1:11347 - 302 0B in 52.798208ms
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/ HTTP/1.1" from 192.168.121.1:11347 - 304 0B in 51.107µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv?page=1&size=10 HTTP/1.1" from 192.168.121.1:11347 - 200 123B in 201.251µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/2gjn HTTP/1.1" from 192.168.121.1:11347 - 200 36B in 26.53µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/3131313 HTTP/1.1" from 192.168.121.1:11347 - 200 41B in 36.496µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/3131313131 HTTP/1.1" from 192.168.121.1:11347 - 200 45B in 50.332µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/3213123fff HTTP/1.1" from 192.168.121.1:11347 - 200 43B in 117.322µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/dd2de1e HTTP/1.1" from 192.168.121.1:11347 - 200 43B in 50.658µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/dsalkjddo233 HTTP/1.1" from 192.168.121.1:11347 - 200 48B in 27.281µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/hahah HTTP/1.1" from 192.168.121.1:11347 - 200 41B in 26.096µs
+2025/05/10 23:25:11 "GET http://192.168.121.128:8080/kv/key1 HTTP/1.1" from 192.168.121.1:11347 - 200 40B in 214.673µs
+time="2025-05-10T23:25:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:25:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:25:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:25:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:25:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:25:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:26:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:26:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:26:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:26:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:26:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:26:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:27:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:27:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:27:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:27:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:27:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:27:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:28:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:28:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:28:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:28:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:28:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:28:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:29:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:29:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:29:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:29:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:29:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:29:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:30:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:30:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:30:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:30:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:30:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:30:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:31:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:31:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:31:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:31:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:31:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:31:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:32:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:32:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:32:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:32:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:32:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:32:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:33:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:33:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:33:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:33:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:33:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:33:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:34:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:34:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:34:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:34:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:34:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:34:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:35:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:35:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:35:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:35:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:35:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:35:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:36:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:36:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:36:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:36:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:36:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:36:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:37:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:37:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:37:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:37:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:37:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:37:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:38:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:38:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:38:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:38:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:38:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:38:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:39:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:39:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:39:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:39:54+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:39:54+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:39:54+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
+time="2025-05-10T23:40:24+08:00" level=info msg="Running TTL GC..." goroutine=9 module=runtime
+time="2025-05-10T23:40:24+08:00" level=info msg="Purging expired keys..." goroutine=9 module=store
+time="2025-05-10T23:40:24+08:00" level=info msg="TTL GC completed successfully" goroutine=9 module=runtime
