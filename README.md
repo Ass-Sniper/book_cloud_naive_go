@@ -314,3 +314,181 @@ sequenceDiagram
 通过这种设计，Go 实现了 **高可靠性的 I/O 抽象层**，使开发者无需关注底层系统调用的中断细节，这是 Go 网络编程高性能的重要基础之一。
 
 
+---
+
+# **Go运行时在何时何处调用epoll_wait**
+
+Go 运行时通过 `epoll_wait` 实现高效的 **I/O 多路复用**，其调用机制与调度器深度集成。以下是详细的调用场景和流程：
+
+---
+
+## **调用时机**
+Go 运行时在以下三种场景会触发 `epoll_wait` 调用：
+
+### 1. **调度器空闲时（主动轮询）**
+```go
+// runtime/proc.go
+func schedule() {
+    // ...
+    if gp == nil {
+        gp, inheritTime = findRunnable() // 尝试获取可运行的 G
+    }
+    if gp == nil {
+        // 进入 netpoll 等待 I/O 事件
+        pollUntil = checkTimers() // 检查定时器
+        netpoll(block)            // 调用 epoll_wait
+    }
+    // ...
+}
+```
+- **触发条件**：当所有本地运行队列和全局运行队列为空时
+- **最大阻塞时间**：由最近定时器的到期时间决定（避免饿死定时任务）
+
+### 2. **sysmon 监控线程（被动唤醒）**
+```go
+// runtime/proc.go
+func sysmon() {
+    for {
+        // 每 20us~10ms 检查一次网络
+        delay := int64(atomic.Load64(&sched.sysmonwait))
+        if delay > 0 {
+            netpoll(delay) // 带超时的 epoll_wait
+        }
+        // ...
+    }
+}
+```
+- **周期**：初始 20μs，无事件时指数退避至 10ms
+- **作用**：防止长时间无调度导致 I/O 事件延迟处理
+
+### 3. **主动发起网络操作时**
+```go
+// net/fd_unix.go
+func (fd *netFD) Read(p []byte) (n int, err error) {
+    for {
+        n, err = syscall.Read(fd.sysfd, p)
+        if err != syscall.EAGAIN {
+            return
+        }
+        // 注册到 epoll 并等待
+        if err = fd.pd.waitRead(); err != nil {
+            return
+        }
+    }
+}
+```
+- **触发路径**：`fd.pd.waitRead()` → `runtime_pollWait` → `poll_runtime_pollWait`
+- **底层调用**：最终触发 `gopark` 挂起 goroutine，并可能触发立即的 `netpoll`
+
+---
+
+## **调用位置**
+具体实现位于平台特定的网络轮询器中（以 Linux 为例）：
+```go
+// runtime/netpoll_epoll.go
+func netpoll(delay int64) gList {
+    var events [128]epollevent
+retry:
+    // 关键系统调用
+    n := epoll_wait(epfd, &events[0], int32(len(events)), waitms)
+    
+    for i := int32(0); i < n; i++ {
+        ev := &events[i]
+        pd := *(**pollDesc)(unsafe.Pointer(&ev.data))
+        netpollready(&toRun, pd, mode)
+    }
+    return toRun
+}
+```
+
+---
+
+## **完整工作流程**
+```mermaid
+sequenceDiagram
+    participant G as Goroutine
+    participant S as Scheduler
+    participant NP as Netpoller (epoll)
+    participant Kernel
+
+    G->>S: 发起阻塞读操作 (e.g., conn.Read)
+    S->>NP: 将 fd 注册到 epoll (epoll_ctl)
+    S->>NP: 挂起 G 并调用 gopark
+    NP->>Kernel: epoll_wait (阻塞等待事件)
+    Kernel-->>NP: 返回就绪的 fd 列表
+    NP->>S: 将关联的 G 加入运行队列
+    S->>G: 调度恢复执行
+    G->>Kernel: 重试 read 系统调用
+    Kernel-->>G: 返回数据
+```
+
+---
+
+## **性能优化机制**
+1. **批量事件处理**  
+   `epoll_wait` 每次最多获取 128 个事件（`var events [128]epollevent`），减少系统调用次数。
+
+2. **延迟合并**  
+   通过 `sched.sysmonwait` 动态调整轮询间隔，在低负载时减少空轮询开销。
+
+3. **LT 模式使用**  
+   Go 采用水平触发（Level-Triggered）模式：
+   ```c
+   // runtime/netpoll_epoll.go
+   epollctl(epfd, _EPOLL_CTL_ADD, int32(fd), &ev)
+   ```
+   - 优点：避免遗漏未处理的事件
+   - 缺点：需配合边缘触发逻辑（通过 `pd.setEventErr` 标记已处理）
+
+4. **零拷贝优化**  
+   对已就绪的 socket 直接返回 `EAGAIN` 错误而非阻塞，由 Go 运行时重新调度：
+   ```go
+   // internal/poll/fd_unix.go
+   if err == syscall.EAGAIN {
+       return 0, err
+   }
+   ```
+
+---
+
+## **诊断方法**
+### 1. 观察 epoll 调用频率
+```bash
+strace -e epoll_wait -p <GO_PID>
+```
+- 正常情况：间隔与调度频率匹配（微秒级到毫秒级）
+- 异常情况：持续高频调用可能表明空轮询问题
+
+### 2. 分析调度延迟
+```go
+GODEBUG=schedtrace=1000 ./program
+```
+输出示例：
+```
+SCHED 0ms: gomaxprocs=8 idleprocs=5 threads=5 ...
+SCHED 1001ms: gomaxprocs=8 idleprocs=8 threads=5 ...
+```
+- `idleprocs=8` 表示所有 P 都进入轮询等待
+
+### 3. 检查网络负载
+```bash
+cat /proc/<GO_PID>/net/sockstat
+```
+观察 `sockets: used` 是否与 Go 程序维护的连接数匹配
+
+---
+
+## **跨平台实现差异**
+| 系统      | 实现           | 对应 Go 文件             |
+|----------|---------------|-------------------------|
+| Linux    | epoll         | runtime/netpoll_epoll.go|
+| macOS    | kqueue        | runtime/netpoll_kqueue.go|
+| Windows  | IOCP          | runtime/netpoll_windows.go|
+| Solaris  | event ports   | runtime/netpoll_solaris.go|
+
+所有平台的统一接口定义在 `runtime/netpoll.go` 中，通过 `netpollinit`, `netpollopen`, `netpoll` 等函数抽象。
+
+---
+
+通过这种设计，Go 运行时在保持高并发性能的同时，将 epoll 的复杂性完全隐藏在运行时层，为开发者提供了简洁的同步编程模型。
+
