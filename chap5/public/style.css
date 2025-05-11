@@ -44,9 +44,18 @@ body {
     background-color: #d32f2f;
   }
   
-  .edit-mode button {
-    margin-right: 5px;
-  }
+    /* 统一按钮基础样式 */
+    button {
+        display: inline-block;
+        margin: 2px;
+        padding: 4px 8px;
+    }
+
+    /* 定义模式切换的通用样式 */
+    .view-mode, .edit-mode {
+        display: inline-block !important;
+        vertical-align: middle;
+    }
   
   .json-toggle {
     cursor: pointer;

@@ -68,16 +68,24 @@ document.getElementById('addForm').addEventListener('submit', async e => {
   loadKeys(currentPage);
 });
 
+// 修改后的 enableEdit 函数
 function enableEdit(btn) {
     const row = btn.closest('tr');
     row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
-    row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'block');
+    row.querySelectorAll('.edit-mode').forEach(el => {
+        el.style.display = 'inline-block'; // 保持行内布局
+        el.style.marginRight = '5px'; // 添加间距
+    });
 }
-  
+
+// 修改后的 cancelEdit 函数
 function cancelEdit(btn) {
     const row = btn.closest('tr');
     row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
-    row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'block');
+    row.querySelectorAll('.view-mode').forEach(el => {
+        el.style.display = 'inline-block'; // 保持行内布局
+        el.style.marginRight = '5px'; // 保持样式统一
+    });
 }
 
 async function saveEdit(btn, oldKey) {
