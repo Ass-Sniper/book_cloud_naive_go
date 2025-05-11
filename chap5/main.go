@@ -40,6 +40,11 @@ func main() {
 	// 注册登录路由（不需要登录）
 	handler.RegisterAuthRoutes(r)
 
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	r.Handle("/public/*",
 		http.StripPrefix("/public",
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -67,7 +72,7 @@ func main() {
 
 	// 启动 pprof 服务（监听 :6060）
 	go func() {
-		logger.Log.Info("pprof running at http://192.168.121.128:6060/debug/pprof/")
+		logger.Log.Info("pprof running at http://0.0.0.0:6060/debug/pprof/")
 		pprofMux := http.NewServeMux()
 		pprofMux.HandleFunc("/debug/pprof/", pprof.Index)
 		pprofMux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
@@ -75,13 +80,13 @@ func main() {
 		pprofMux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 		pprofMux.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
-		if err := http.ListenAndServe(":6060", pprofMux); err != nil {
+		if err := http.ListenAndServe("0.0.0.0:6060", pprofMux); err != nil {
 			logger.Log.Fatalf("Failed to start pprof: %v", err)
 		}
 	}()
 
-	logger.Log.Info("KV store running at http://192.168.121.128:8080")
-	err = http.ListenAndServe(":8080", r)
+	logger.Log.Info("KV store running at http://0.0.0.0:8080")
+	err = http.ListenAndServe("0.0.0.0:8080", r)
 	if err != nil {
 		logger.Log.Fatalf("Failed to start server: %v", err)
 	}

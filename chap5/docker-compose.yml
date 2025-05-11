@@ -1,0 +1,45 @@
+# docker-compose.yml
+
+services:
+  app:
+    build: .
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "8080:8080"  # 主业务接口
+      - "6060:6060"  # pprof 接口
+    networks:
+      - kvstore_net
+    healthcheck:
+      # 检查业务服务是否正常（8080 端口）
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    build:
+      context: .  # 使用自定义的 Dockerfile 构建 nginx 镜像
+      dockerfile: Dockerfile.nginx  # 指定 Dockerfile 的名称
+    ports:
+      - "80:80"  # 将 nginx 对外暴露在 80 端口
+      - "443:443"  # 将 nginx 对外暴露在 443 端口
+    depends_on:
+      app:
+        condition: service_healthy
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs  # 挂载证书
+    healthcheck:
+      # 检查业务服务是否正常（80 端口）
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:80/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - kvstore_net
+
+networks:
+  kvstore_net:
+    driver: bridge
+    attachable: true

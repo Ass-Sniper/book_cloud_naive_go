@@ -1,2 +1,4 @@
 chap5/bin
 chap5/kvstore.db
+chap5/certs
+chap5/boltbrowser.linux64
