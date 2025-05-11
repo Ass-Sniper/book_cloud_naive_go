@@ -183,6 +183,8 @@ http {
 # **3. 重新构建docker镜像**
 
 ```shell
+kay@kay-vm:chap5$ docker pull swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/ubuntu:20.04
+kay@kay-vm:chap5$ docker tag  swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/ubuntu:20.04  docker.io/ubuntu:20.04
 kay@kay-vm:chap5$ sudo docker compose down && docker compose up -d --build
 Compose can now delegate builds to bake for better performance.
  To do so, set COMPOSE_BAKE=true.
