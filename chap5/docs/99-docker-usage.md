@@ -24,6 +24,69 @@ Total reclaimed space: 72.81MB
 kay@kay-vm:docker$
 ```
 
+## **删除无容器关联的镜像**
+
+```shell
+kay@kay-vm:docker$ docker images
+REPOSITORY                                                          TAG       IMAGE ID       CREATED          SIZE
+docker-app                                                          latest    16d839dada80   4 minutes ago    107MB
+docker-nginx                                                        latest    fc3a9ed2b6d6   37 minutes ago   143MB
+<none>                                                              <none>    8e782daf213c   43 minutes ago   143MB
+<none>                                                              <none>    84658a759ec0   44 minutes ago   107MB
+ubuntu                                                              20.04     9df6d6105df2   9 months ago     72.8MB
+swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/ubuntu   20.04     9df6d6105df2   9 months ago     72.8MB
+kay@kay-vm:docker$
+kay@kay-vm:docker$
+kay@kay-vm:docker$
+kay@kay-vm:docker$ docker image prune -a
+WARNING! This will remove all images without at least one container associated to them.
+Are you sure you want to continue? [y/N] y
+Deleted Images:
+deleted: sha256:84658a759ec0add082ee2b15ebed4d979e22f2e1972e3dd8aef8406d14558e61
+deleted: sha256:8e782daf213c35a52f17792291b713c2a87ce236949f03e8d7692cb86e9cc53f
+untagged: ubuntu:20.04
+untagged: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/ubuntu:20.04
+untagged: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/ubuntu@sha256:a3465b987ac01e4f028c6659d77f13648db791d6026d89c35e45cee16de6c045
+deleted: sha256:9df6d6105df2788299e5cbbf3dfd09aa6b3b5a10b784b214c35a035f76deb4ba
+
+Total reclaimed space: 0B
+kay@kay-vm:docker$
+
+```
+
+## **只删除无 tag（即 <none>）的镜像，保留所有有 tag 的镜像**
+
+`docker image prune -a` 会删除所有未被容器使用的 **悬空镜像（dangling images）和未打 tag 的镜像**，**包括有 tag 但未使用的镜像**，所以不能直接使用它来“只删除无 tag 的镜像”。
+
+如果你希望：
+
+> **只删除无 tag（即 `<none>`）的镜像**，**保留所有有 tag 的镜像**，
+
+请使用这个命令：
+
+```bash
+docker images -f "dangling=true" -q | xargs -r docker rmi
+```
+
+### 解释：
+
+* `-f "dangling=true"`：只列出 `<none>:<none>` 镜像（没有 tag 的）。
+* `-q`：只显示镜像 ID。
+* `xargs -r docker rmi`：删除这些镜像（如果有结果才执行 `docker rmi`）。
+
+### 补充说明：
+
+如果你仍想用 `docker image prune`，但控制其行为，可以使用：
+
+```bash
+docker image prune
+```
+
+这将 **只删除悬空镜像**（即 `<none>`），不会删除有 tag 的镜像。**不要加 `-a`**，否则会删除所有未被使用的镜像（包括有 tag 的）。
+
+
+---
+
 ## **1.2. 拉取镜像时看到 560c024910be: Already exists**
 
 在拉取镜像时看到 `560c024910be: Already exists`，这表示 Docker 检测到该镜像的某些层已经存在于本地缓存中，因此无需重复下载。这是 Docker 的正常行为，**无需解决**，也不会影响镜像的功能。以下是详细解释和扩展建议：
