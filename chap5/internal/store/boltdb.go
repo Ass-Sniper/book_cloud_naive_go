@@ -6,7 +6,8 @@ import (
 	"time"
 
 	// 引入日志模块
-	"github.com/kay/kvstore/logger"
+	"kvstore/internal/logger"
+
 	bolt "go.etcd.io/bbolt"
 )
 

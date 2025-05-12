@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 证书保存目录
-CERT_DIR="./certs"
+CERT_DIR="./config/nginx/certs"
 DOMAIN="192.168.16.248"  # 修改为你的 IP 或域名
 DAYS=365
 DHPARAM_FILE="$CERT_DIR/dhparam.pem"  # Diffie-Hellman 参数文件路径

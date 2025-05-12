@@ -3,9 +3,12 @@ package handler
 import (
 	"html/template"
 	"net/http"
+	"path/filepath"
+
+	"kvstore/internal/auth"
+	"kvstore/internal/config"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/kay/kvstore/auth"
 )
 
 func RegisterAuthRoutes(r chi.Router) {
@@ -16,30 +19,30 @@ func RegisterAuthRoutes(r chi.Router) {
 	r.Get("/logout", logoutHandler)
 }
 
-// 登录页面
+// Login page
 func loginPage(w http.ResponseWriter, r *http.Request) {
-	tpl, err := template.ParseFiles("templates/login.html")
+	tpl, err := template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "login.html"))
 	if err != nil {
-		http.Error(w, "模板加载失败", http.StatusInternalServerError)
+		http.Error(w, "Failed to load template", http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	tpl.Execute(w, nil)
 }
 
-// 登录处理
+// Login handler
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if !auth.ValidateUser(username, password) {
-		tpl, err := template.ParseFiles("templates/login.html")
+		tpl, err := template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "login.html"))
 		if err != nil {
-			http.Error(w, "模板加载失败", http.StatusInternalServerError)
+			http.Error(w, "Failed to load template", http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		tpl.Execute(w, map[string]string{"Error": "用户名或密码错误"})
+		tpl.Execute(w, map[string]string{"Error": "Invalid username or password"})
 		return
 	}
 
@@ -53,48 +56,48 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-// 注册页面
+// Register page
 func registerPage(w http.ResponseWriter, r *http.Request) {
-	tpl := template.Must(template.ParseFiles("templates/register.html"))
+	tpl := template.Must(template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "register.html")))
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	tpl.Execute(w, nil)
 }
 
-// 注册处理
+// Register handler
 func registerHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	confirm := r.FormValue("confirm")
 
 	if password != confirm {
-		renderRegisterPage(w, "两次输入的密码不一致")
+		renderRegisterPage(w, "Passwords do not match")
 		return
 	}
 
 	err := auth.RegisterUser(username, password)
 	if err != nil {
-		renderRegisterPage(w, "注册失败: "+err.Error())
+		renderRegisterPage(w, "Registration failed: "+err.Error())
 		return
 	}
 
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
 
-// 抽出错误渲染逻辑
+// Render register page with error
 func renderRegisterPage(w http.ResponseWriter, errMsg string) {
-	tpl := template.Must(template.ParseFiles("templates/register.html"))
+	tpl := template.Must(template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "register.html")))
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	tpl.Execute(w, map[string]string{"Error": errMsg})
 }
 
-// 注销处理
+// Logout handler
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
 		auth.Logout(cookie.Value)
 	}
 
-	// 永远清除 Cookie，无论是否存在有效 session
+	// Always clear cookie
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",
 		Value:    "",

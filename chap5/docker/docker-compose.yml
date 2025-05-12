@@ -2,7 +2,10 @@
 
 services:
   app:
-    build: .
+    container_name: kvstore-app   # 👈 显式指定容器名称
+    build:
+      context: ..                  # 👈 指向项目根目录
+      dockerfile: docker/Dockerfile
     environment:
       - TZ=Asia/Shanghai
     ports:
@@ -18,9 +21,10 @@ services:
       retries: 3
 
   nginx:
+    container_name: kvstore-nginx  # 👈 显式指定容器名称
     build:
-      context: .  # 使用自定义的 Dockerfile 构建 nginx 镜像
-      dockerfile: Dockerfile.nginx  # 指定 Dockerfile 的名称
+      context: ..  # 使用上级目录作为上下文
+      dockerfile: config/nginx/Dockerfile.nginx  # 指定 Dockerfile 的路径
     ports:
       - "80:80"  # 将 nginx 对外暴露在 80 端口
       - "443:443"  # 将 nginx 对外暴露在 443 端口
@@ -28,8 +32,8 @@ services:
       app:
         condition: service_healthy
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certs:/etc/nginx/certs  # 挂载证书
+      - ../config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../config/nginx/certs:/etc/nginx/certs
     healthcheck:
       # 检查业务服务是否正常（80 端口）
       test: ["CMD", "curl", "-f", "http://0.0.0.0:80/health"]

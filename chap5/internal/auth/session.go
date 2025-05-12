@@ -8,15 +8,16 @@ import (
 	"strings"
 	"sync"
 
+	"kvstore/internal/config"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
 var (
 	// map的两种初始化方式：make 或字面量 {} 初始化
-	users     = make(map[string]string) // 存储用户名和加密后的密码。make 方式初始化：创建空 map，预分配空间、性能稍高，便于后续添加元素
-	sessions  = map[string]string{}     // 存储会话令牌和用户名。字面量 {} 初始化：简洁表达，适合初始化时有固定值
-	mu        sync.Mutex
-	usersFile = "users.txt" // 用户信息存储文件
+	users    = make(map[string]string) // 存储用户名和加密后的密码。make 方式初始化：创建空 map，预分配空间、性能稍高，便于后续添加元素
+	sessions = map[string]string{}     // 存储会话令牌和用户名。字面量 {} 初始化：简洁表达，适合初始化时有固定值
+	mu       sync.Mutex
 )
 
 // 加载用户信息
@@ -25,7 +26,7 @@ func LoadUsers() error {
 	defer mu.Unlock()
 
 	// 读取用户信息文件
-	data, err := os.ReadFile(usersFile)
+	data, err := os.ReadFile(config.Cfg.UsersFile)
 	if err != nil {
 		return fmt.Errorf("failed to read user file: %v", err)
 	}
@@ -66,7 +67,7 @@ func SaveUsers() error {
 	}
 
 	// 文件持久化：将数据写入用户文件，设置文件权限为0644 (-rw-r--r--)
-	return os.WriteFile(usersFile, []byte(strings.Join(data, "\n")), 0644)
+	return os.WriteFile(config.Cfg.UsersFile, []byte(strings.Join(data, "\n")), 0644)
 }
 
 /*

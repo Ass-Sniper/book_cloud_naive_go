@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"github.com/kay/kvstore/logger"
+	"kvstore/internal/logger"
 )
 
 // AuthMiddleware HTTP身份验证中间件，用于验证请求中的会话Cookie

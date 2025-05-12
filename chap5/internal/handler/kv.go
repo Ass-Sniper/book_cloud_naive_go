@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"kvstore/internal/store"
+
 	"github.com/go-chi/chi/v5"
-	"github.com/kay/kvstore/store"
 )
 
 type KVRequest struct {
