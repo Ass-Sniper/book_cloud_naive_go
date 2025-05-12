@@ -3,91 +3,88 @@ package main
 import (
 	"context"
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-
 	"kvstore/internal/auth"
 	"kvstore/internal/config"
 	"kvstore/internal/handler"
-	"kvstore/internal/logger" // 引入日志模块
+	"kvstore/internal/logger"
 	"kvstore/internal/store"
-
 	"net/http/pprof"
 	_ "net/http/pprof"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
-func main() {
-
-	// 加载配置
-	// 定义命令行参数，默认为 config/config.json
+// loadConfiguration loads the configuration file and returns an error if any.
+func loadConfiguration() error {
 	configPath := flag.String("config", "config/config.json", "path to config file")
 	flag.Parse()
-	err := config.LoadConfig(*configPath)
-	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+	if err := config.LoadConfig(*configPath); err != nil {
+		return err
 	}
+	return nil
+}
 
-	err = auth.LoadUsers()
-	if err != nil {
-		logger.Log.Fatalf("Failed to load users: %v", err)
+// loadUsers loads user data and returns an error if any.
+func loadUsers() error {
+	if err := auth.LoadUsers(); err != nil {
+		return err
 	}
+	return nil
+}
 
-	logger.Log.Info("Starting the KV Store Server...")
-
+// initializeStore initializes the store and returns it, or an error if any.
+func initializeStore() (*store.Store, error) {
 	dbStore, err := store.NewStore(config.Cfg.DBFile)
 	if err != nil {
-		logger.Log.Fatalf("Failed to open DB: %v", err)
+		return nil, err
 	}
-	defer dbStore.Close()
+	return dbStore, nil
+}
 
-	// 启动 TTL 垃圾回收
-	go dbStore.StartTTLGC(30 * time.Second) // 每30秒清理一次过期的键值对
+// startTTLGC starts a goroutine for TTL garbage collection.
+func startTTLGC(dbStore *store.Store) {
+	go dbStore.StartTTLGC(30 * time.Second) // Every 30 seconds to clean expired keys
+}
 
+// configureRouter configures the routes and middlewares for the HTTP server.
+func configureRouter(dbStore *store.Store) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	// 注册登录路由（不需要登录）
+	// Register public routes
 	handler.RegisterAuthRoutes(r)
 
+	// Health check route
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
 
-	r.Handle("/public/*",
-		http.StripPrefix("/public",
-			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				// 设置 1 天浏览器缓存
-				w.Header().Set("Cache-Control", "public, max-age=86400")
-				http.FileServer(http.Dir(config.Cfg.PublicDir)).ServeHTTP(w, r)
-			}),
-		),
-	)
+	// Static file handling for /public
+	r.Handle("/public/*", http.StripPrefix("/public", http.FileServer(http.Dir(config.Cfg.PublicDir))))
 
-	// 需认证保护的路由
+	// Routes that require authentication
 	r.Group(func(r chi.Router) {
-
-		// 认证中间件
 		r.Use(auth.AuthMiddleware)
-
-		// 注册 KV 路由
 		handler.RegisterKVRoutes(r, dbStore)
-
-		// 根路径
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, config.Cfg.IndexFile)
 		})
 	})
 
+	return r
+}
+
+// startPprof starts the pprof server if enabled in the configuration.
+func startPprof() {
 	if config.Cfg.EnablePprof {
-		// 启动 pprof 服务（默认监听 :6060）
 		go func() {
 			logger.Log.Infof("pprof running at http://%s/debug/pprof/", config.Cfg.PprofAddr)
 			pprofMux := http.NewServeMux()
@@ -102,14 +99,15 @@ func main() {
 			}
 		}()
 	}
+}
 
-	// 创建 HTTP 服务器对象
+// startServer starts the HTTP server and listens on the configured address.
+func startServer(r *chi.Mux) *http.Server {
 	server := &http.Server{
 		Addr:    config.Cfg.HTTPAddr,
 		Handler: r,
 	}
 
-	// 启动主服务（默认监听 :8080）
 	go func() {
 		logger.Log.Infof("KV store running at http://%s", config.Cfg.HTTPAddr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -117,23 +115,59 @@ func main() {
 		}
 	}()
 
-	// 捕获终止信号 (SIGINT, SIGTERM)
+	return server
+}
+
+// shutdownServer gracefully shuts down the server with a timeout.
+func shutdownServer(server *http.Server) {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
 
-	// 等待停止信号
+	// Wait for stop signal
 	<-stop
 
 	logger.Log.Info("Shutting down server...")
 
-	// 设置超时进行优雅关闭
+	// Setting up timeout for graceful shutdown
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	// 关闭服务
 	if err := server.Shutdown(ctx); err != nil {
 		logger.Log.Fatalf("Server Shutdown Failed: %v", err)
 	}
 	logger.Log.Info("Server exited")
+}
 
+func main() {
+	// Load configuration
+	if err := loadConfiguration(); err != nil {
+		logger.Log.Fatalf("Failed to load config: %v", err)
+	}
+
+	// Load users for authentication
+	if err := loadUsers(); err != nil {
+		logger.Log.Fatalf("Failed to load users: %v", err)
+	}
+
+	// Initialize the key-value store
+	dbStore, err := initializeStore()
+	if err != nil {
+		logger.Log.Fatalf("Failed to open DB: %v", err)
+	}
+	defer dbStore.Close()
+
+	// Start TTL garbage collection
+	startTTLGC(dbStore)
+
+	// Configure the router
+	r := configureRouter(dbStore)
+
+	// Start pprof server if enabled
+	startPprof()
+
+	// Start the main HTTP server
+	server := startServer(r)
+
+	// Gracefully shutdown the server
+	shutdownServer(server)
 }
