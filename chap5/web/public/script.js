@@ -20,29 +20,23 @@ async function loadKeys(page = 1) {
   
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>
-          <span class="key-view">${key}</span>
-          <input class="key-edit" value="${key}" style="display:none;">
-        </td>
-        <td>
-          <div class="view-mode">${value}</div>
-          <div class="edit-mode" style="display:none;">
-            <input type="text" value="${value}" style="width:90%;">
-          </div>
-        </td>
-        <td>
-          <div class="view-mode">${ttl}</div>
-          <div class="edit-mode" style="display:none;">
-            <input type="number" value="${ttl}" min="0" style="width:60px;">
-          </div>
-        </td>
-        <td>
-          <button class="view-mode" onclick="deleteKey('${key}')">删除</button>
-          <button class="view-mode" onclick="enableEdit(this)">编辑</button>
-          <button class="edit-mode" style="display:none;" onclick="saveEdit(this, '${key}')">保存</button>
-          <button class="edit-mode" style="display:none;" onclick="cancelEdit(this)">取消</button>
-        </td>
-      `;
+      <td>
+        <span class="key-view">${key}</span>
+        <input class="key-edit" value="${key}" style="display:none;" readonly>
+      </td>
+      <td>
+        <input class="value-field" type="text" value="${value}" style="background:#f0f0f0;" readonly>
+      </td>
+      <td>
+        <input class="ttl-field" type="number" value="${ttl}" min="0" style="width:60px; background:#f0f0f0;" readonly>
+      </td>
+      <td>
+        <button class="btn-edit" onclick="enableEdit(this)">编辑</button>
+        <button class="btn-save" style="display:none;" onclick="saveEdit(this, '${key}')">保存</button>
+        <button class="btn-cancel" style="display:none;" onclick="cancelEdit(this)">取消</button>
+        <button onclick="deleteKey('${key}')">删除</button>
+      </td>
+      `;   
       tbody.appendChild(row);
     }
   
@@ -70,55 +64,75 @@ document.getElementById('addForm').addEventListener('submit', async e => {
 
 // 修改后的 enableEdit 函数
 function enableEdit(btn) {
-    const row = btn.closest('tr');
-    row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
-    row.querySelectorAll('.edit-mode').forEach(el => {
-        el.style.display = 'inline-block'; // 保持行内布局
-        el.style.marginRight = '5px'; // 添加间距
-    });
+  const row = btn.closest('tr');
+  // 启用可编辑
+  const valueInput = row.querySelector('.value-field');
+  const ttlInput = row.querySelector('.ttl-field');
+
+  valueInput.readOnly = false;
+  ttlInput.readOnly = false;
+  valueInput.style.background = '#ffffff';
+  ttlInput.style.background = '#ffffff';
+
+  // 显示“保存”和“取消”按钮，隐藏“编辑”
+  row.querySelector('.btn-edit').style.display = 'none';
+  row.querySelector('.btn-save').style.display = 'inline-block';
+  row.querySelector('.btn-cancel').style.display = 'inline-block';
 }
 
 // 修改后的 cancelEdit 函数
 function cancelEdit(btn) {
-    const row = btn.closest('tr');
-    row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
-    row.querySelectorAll('.view-mode').forEach(el => {
-        el.style.display = 'inline-block'; // 保持行内布局
-        el.style.marginRight = '5px'; // 保持样式统一
-    });
+  const row = btn.closest('tr');
+
+  const valueInput = row.querySelector('.value-field');
+  const ttlInput = row.querySelector('.ttl-field');
+
+  // 恢复为只读和灰色背景
+  valueInput.readOnly = true;
+  ttlInput.readOnly = true;
+  valueInput.style.background = '#f0f0f0';
+  ttlInput.style.background = '#f0f0f0';
+
+  // 隐藏“保存”和“取消”，显示“编辑”
+  row.querySelector('.btn-edit').style.display = 'inline-block';
+  row.querySelector('.btn-save').style.display = 'none';
+  row.querySelector('.btn-cancel').style.display = 'none';
+
+  // 恢复原值（可选）
+  loadKeys(currentPage);
 }
 
 async function saveEdit(btn, oldKey) {
-    const row = btn.closest('tr');
-    const keyInput = row.querySelector('.key-edit');
-    const newKey = keyInput ? keyInput.value.trim() : oldKey;
-  
-    const valueInput = row.querySelector('td:nth-child(2) .edit-mode input');
-    const ttlInput = row.querySelector('td:nth-child(3) .edit-mode input');
-  
-    const newValue = valueInput ? valueInput.value.trim() : '';
-    const newTTL = ttlInput ? parseInt(ttlInput.value) : 0;
-  
-    if (!newKey) return alert('Key不能为空');
-  
-    const payload = {
-      value: newValue,
-      ttl: newTTL
-    };
-  
-    // 如果 key 被改名，先删除旧的再写入新的
-    if (newKey !== oldKey) {
-      await fetch(`${API}/${oldKey}`, { method: 'DELETE' });
-    }
-  
-    await fetch(`${API}/${newKey}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  
-    loadKeys(currentPage);
-}  
+  const row = btn.closest('tr');
+  const keyInput = row.querySelector('.key-edit');
+  const newKey = keyInput ? keyInput.value.trim() : oldKey;
+
+  const valueInput = row.querySelector('.value-field');
+  const ttlInput = row.querySelector('.ttl-field');
+
+  const newValue = valueInput ? valueInput.value.trim() : '';
+  const newTTL = ttlInput ? parseInt(ttlInput.value) : 0;
+
+  if (!newKey) return alert('Key不能为空');
+
+  const payload = {
+    value: newValue,
+    ttl: newTTL
+  };
+
+  if (newKey !== oldKey) {
+    await fetch(`${API}/${oldKey}`, { method: 'DELETE' });
+  }
+
+  await fetch(`${API}/${newKey}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  loadKeys(currentPage);
+}
+
 
 function updatePagination(total) {
   const pagination = document.getElementById('pagination');
