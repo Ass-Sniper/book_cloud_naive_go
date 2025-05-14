@@ -12,6 +12,7 @@ import (
 	"kvstore/internal/auth"
 	"kvstore/internal/config"
 	"kvstore/internal/handler"
+	"kvstore/internal/i18n"
 	"kvstore/internal/logger"
 	"kvstore/internal/store"
 	"net/http/pprof"
@@ -142,6 +143,10 @@ func main() {
 	// Load configuration
 	if err := loadConfiguration(); err != nil {
 		logger.Log.Fatalf("Failed to load config: %v", err)
+	}
+
+	if err := i18n.InitializeTranslator(); err != nil {
+		logger.Log.Fatalf("Failed to initialize translator: %v", err)
 	}
 
 	// Load users for authentication

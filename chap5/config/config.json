@@ -4,6 +4,8 @@
   "public_dir": "web/public",
   "index_file": "web/public/index.html",
   "templates_dir": "web/templates",
+  "translations_dir": "config/locales",
+  "default_language": "zh-Hans",
   "http_addr": "0.0.0.0:8080",
   "enable_pprof": true,
   "pprof_addr": "0.0.0.0:6060"

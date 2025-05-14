@@ -4,8 +4,23 @@ services:
   app:
     container_name: kvstore-app   # 👈 显式指定容器名称
     build:
-      context: ..                  # 👈 指向项目根目录
+      context: ..                  # 👈 以docker-compose.yml所在目录的上级目录（../）作为项目根目录
       dockerfile: docker/Dockerfile
+    develop:
+      watch:
+        - action: sync
+          path: ../web
+          target: /app/web
+        - action: sync+restart
+          path: ../config/config.json     # app配置文件
+          target: /app/config/config.json
+        - action: sync+restart
+          path: ../config/locales        # app本地化配置文件：翻译文件
+          target: /app/config/locales               
+        - action: rebuild
+          path: ../cmd
+        - action: rebuild
+          path: ../interval        
     environment:
       - TZ=Asia/Shanghai
     ports:
@@ -23,8 +38,13 @@ services:
   nginx:
     container_name: kvstore-nginx  # 👈 显式指定容器名称
     build:
-      context: ..  # 使用上级目录作为上下文
+      context: ..  # 以docker-compose.yml所在目录的上级目录（../）作为上下文
       dockerfile: config/nginx/Dockerfile.nginx  # 指定 Dockerfile 的路径
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../config/nginx
+          target: /etc/nginx
     ports:
       - "80:80"  # 将 nginx 对外暴露在 80 端口
       - "443:443"  # 将 nginx 对外暴露在 443 端口

@@ -1,0 +1,19 @@
+{
+    "0x01010001": "Username already exists",
+    "0x01010002": "Passwords do not match",
+    "0x01010003": "Invalid username or password",
+    "0x01010004": "User does not exist",
+    "0x01010005": "Invalid user session",
+    "0x02020001": "Key not found or expired",
+    "0x02020002": "Invalid TTL",
+    "0x02020003": "Failed to set value",
+    "0x02020004": "Failed to delete key",
+    "0x02020005": "Failed to list keys",
+    "0x02020006": "Invalid JSON",
+    "0x03030001": "Invalid session token",
+    "0x03030002": "Failed to create session",
+    "0x04040001": "Failed to load template",
+    "0x04040002": "Failed to read user file",
+    "0x04040003": "Failed to write user file",
+    "0x09090001": "Unknown error"
+}

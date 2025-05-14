@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"kvstore/internal/config"
+	"kvstore/internal/errors"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -171,18 +172,19 @@ func GetUsernameByToken(token string) (string, bool) {
 //
 // 返回值:
 //   - error: 注册失败时返回错误原因，包含用户名冲突或保存失败等情况
-func RegisterUser(username, password string) error {
+func RegisterUser(username, password string) uint32 {
 	// 检查用户名是否已被注册
 	// 通过查询内存中的用户映射判断重复注册
 	if _, exists := users[username]; exists {
-		return fmt.Errorf("username already exists")
+		// 直接返回翻译后的字符串
+		return errors.AUTH_ERR_USER_ALREADY_EXISTS
 	}
 
 	// 对原始密码进行不可逆加密处理
 	// 使用bcrypt等安全哈希算法保护用户密码
 	hashedPassword, err := HashPassword(password)
 	if err != nil {
-		return err
+		return errors.UNKNOWN_ERR_GENERAL
 	}
 
 	// 将加密后的密码存入内存缓存
@@ -191,7 +193,11 @@ func RegisterUser(username, password string) error {
 
 	// 将内存中的用户数据同步到持久化存储
 	// 通过文件IO操作确保数据不丢失
-	return SaveUsers()
+	if err := SaveUsers(); err != nil {
+		return errors.UNKNOWN_ERR_GENERAL
+	}
+
+	return errors.AUTH_SUCCESS
 }
 
 // Logout 删除指定 token 对应的会话

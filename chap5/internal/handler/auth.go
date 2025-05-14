@@ -7,6 +7,8 @@ import (
 
 	"kvstore/internal/auth"
 	"kvstore/internal/config"
+	"kvstore/internal/errors"
+	"kvstore/internal/i18n"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -23,7 +25,7 @@ func RegisterAuthRoutes(r chi.Router) {
 func loginPage(w http.ResponseWriter, r *http.Request) {
 	tpl, err := template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "login.html"))
 	if err != nil {
-		http.Error(w, "Failed to load template", http.StatusInternalServerError)
+		http.Error(w, i18n.Tr(errors.TEMPLATE_ERR_LOAD_FAILED), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -38,11 +40,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if !auth.ValidateUser(username, password) {
 		tpl, err := template.ParseFiles(filepath.Join(config.Cfg.TemplatesDir, "login.html"))
 		if err != nil {
-			http.Error(w, "Failed to load template", http.StatusInternalServerError)
+			http.Error(w, i18n.Tr(errors.TEMPLATE_ERR_LOAD_FAILED), http.StatusInternalServerError)
 			return
 		}
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		tpl.Execute(w, map[string]string{"Error": "Invalid username or password"})
+		tpl.Execute(w, map[string]string{"Error": i18n.Tr(errors.AUTH_ERR_INVALID_CREDENTIALS)})
 		return
 	}
 
@@ -70,13 +73,13 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 	confirm := r.FormValue("confirm")
 
 	if password != confirm {
-		renderRegisterPage(w, "Passwords do not match")
+		renderRegisterPage(w, i18n.Tr(errors.AUTH_ERR_INVALID_CREDENTIALS))
 		return
 	}
 
 	err := auth.RegisterUser(username, password)
-	if err != nil {
-		renderRegisterPage(w, "Registration failed: "+err.Error())
+	if err != errors.AUTH_SUCCESS {
+		renderRegisterPage(w, i18n.Tr(err))
 		return
 	}
 

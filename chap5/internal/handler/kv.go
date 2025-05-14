@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"kvstore/internal/errors"
+	"kvstore/internal/i18n"
 	"kvstore/internal/store"
 
 	"github.com/go-chi/chi/v5"
@@ -40,7 +42,7 @@ func getHandler(s *store.Store) http.HandlerFunc {
 		key := chi.URLParam(r, "key")
 		val, ttl, ok := s.GetWithTTL(key)
 		if ok != nil {
-			http.Error(w, "Key not found or expired", http.StatusNotFound)
+			http.Error(w, i18n.Tr(errors.KV_ERR_KEY_NOT_FOUND), http.StatusNotFound)
 			return
 		}
 		json.NewEncoder(w).Encode(KVResponse{Key: key, Value: val, TTL: ttl})
@@ -52,16 +54,16 @@ func setHandler(s *store.Store) http.HandlerFunc {
 		key := chi.URLParam(r, "key")
 		var req KVRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Invalid JSON", http.StatusBadRequest)
+			http.Error(w, i18n.Tr(errors.KV_ERR_INVALID_JSON), http.StatusBadRequest)
 			return
 		}
 		if req.TTL < 0 {
-			http.Error(w, "Invalid TTL", http.StatusBadRequest)
+			http.Error(w, i18n.Tr(errors.KV_ERR_INVALID_TTL), http.StatusBadRequest)
 			return
 		}
 		err := s.Set(key, req.Value, req.TTL)
 		if err != nil {
-			http.Error(w, "Failed to set value", http.StatusInternalServerError)
+			http.Error(w, i18n.Tr(errors.KV_ERR_SET_VALUE_FAILED), http.StatusInternalServerError)
 			return
 		}
 		json.NewEncoder(w).Encode(KVResponse{Key: key, Value: req.Value, TTL: req.TTL})
@@ -72,7 +74,7 @@ func deleteHandler(s *store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		key := chi.URLParam(r, "key")
 		if err := s.Delete(key); err != nil {
-			http.Error(w, "Failed to delete", http.StatusInternalServerError)
+			http.Error(w, i18n.Tr(errors.KV_ERR_DELETE_FAILED), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(http.StatusNoContent)
@@ -98,7 +100,7 @@ func listKeysHandler(s *store.Store) http.HandlerFunc {
 		// 获取所有 keys
 		keys, err := s.ListKeys()
 		if err != nil {
-			http.Error(w, "Failed to list keys", http.StatusInternalServerError)
+			http.Error(w, i18n.Tr(errors.KV_ERR_LIST_KEYS_FAILED), http.StatusInternalServerError)
 			return
 		}
 
