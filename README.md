@@ -17,7 +17,13 @@
 chap5/
 ├── build/                  # 构建产物目录（如编译后的可执行文件）
 ├── cmd/kvstore/           # 主程序入口（main.go）
-├── config/                # 配置文件，包括 Nginx 配置和证书
+├── config/                 # 配置管理
+│   ├── config.json         # 应用主配置文件
+│   ├── locales/            # 国际化语言文件
+│   └── nginx/              # Nginx 配置
+│       ├── certs/          # HTTPS 证书目录
+│       ├── Dockerfile.nginx # Nginx 容器构建文件
+│       └── nginx.conf      # Nginx 主配置
 ├── data/                  # 运行时数据（数据库文件、用户信息）
 ├── docker/                # Docker 配置，包括 Compose 和 Dockerfile
 ├── docs/                  # 项目相关文档（拓扑、HTTPS、健康检查等）
@@ -72,6 +78,7 @@ docker compose down
 * `00-docker-kvstore-topology.md`：Docker 网络拓扑、容器结构与内核交互图
 * `01-container-cloudnative-tech-overview.md`：容器化与云原生技术演进（涵盖 Docker、Containerd、Kubernetes 和 Ansible 的关系与发展）
 * `99-app-support-https.md`：HTTPS 支持与证书配置说明
+* `99-docker-compose.md`：Docker Compose 详解文档
 * `99-docker-usage.md`：Docker 使用技巧与命令集合
 * `99-app-healthcheck-failure.md`：容器健康检查失败分析
 * `99-Go-Runtime-and-Linux-Syscalls-Implementation.md`：Go 运行时与 Linux 系统调用关系概述
@@ -84,6 +91,7 @@ docker compose down
 * 所有服务通过统一配置文件启动，路径为 `config/config.json`
 * HTTPS 证书存放于 `config/nginx/certs/`，可通过 `scripts/generate_cert.sh` 生成
 * 日志与调试功能集成在 `internal/logger` 与 `pprof` 接口中
+* 多语言支持文件存放于 `config/locales/` 目录
 
 ---
 
